@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Weekly Timetable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            padding: 30px;
+        }
+        .table-modern {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .table-modern th, .table-modern td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .table-modern th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: 600;
+        }
+        .table-modern tr {
+            transition: background-color 0.3s ease;
+        }
+        .table-modern td:hover {
+            background-color: #f1f3f5;
+        }
+        .morning {
+            background-color: #e6f3ff;
+        }
+        .afternoon {
+            background-color: #f0f7ff;
+        }
+        .evening {
+            background-color: #e9f7ef;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #007bff;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .toggle-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn-toggle {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-toggle.on {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .btn-toggle.off {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .modal-content {
+            border-radius: 12px;
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .modal-table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .modal-table td {
+            text-align: center;
+            padding: 10px;
+        }
+        .current-time td {
+            background-color: #cce5ff !important;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        @media (max-width: 768px) {
+            .table-modern th, .table-modern td {
+                font-size: 14px;
+                padding: 10px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .btn-toggle {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Thời Khóa Biểu Tuần</h1>
+    <div class="toggle-container">
+        <button id="toggle-notifications" class="btn-toggle on">Bật Thông Báo</button>
+        <button id="toggle-clock" class="btn-toggle on">Popup Đồng Hồ</button>
+    </div>
+    <div class="container">
+        <table class="table table-modern">
+            <thead>
+                <tr>
+                    <th>Ngày</th>
+                    <th class="morning">Buổi Sáng</th>
+                    <th class="afternoon">Buổi Chiều</th>
+                    <th class="evening">Buổi Tối</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Thứ Hai</td>
+                    <td class="morning" data-day="1" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="1" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="1" data-period="evening">Tối</td>
+                </tr>
+                <tr>
+                    <td>Thứ Ba</td>
+                    <td class="morning" data-day="2" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="2" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="2" data-period="evening">Tối</td>
+                </tr>
+                <tr>
+                    <td>Thứ Tư</td>
+                    <td class="morning" data-day="3" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="3" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="3" data-period="evening">Tối</td>
+                </tr>
+                <tr>
+                    <td>Thứ Năm</td>
+                    <td class="morning" data-day="4" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="4" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="4" data-period="evening">Tối</td>
+                </tr>
+                <tr>
+                    <td>Thứ Sáu</td>
+                    <td class="morning" data-day="5" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="5" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="5" data-period="evening">Tối</td>
+                </tr>
+                <tr>
+                    <td>Thứ Bảy</td>
+                    <td class="morning" data-day="6" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="6" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="6" data-period="evening">Tối</td>
+                </tr>
+                <tr>
+                    <td>Chủ Nhật</td>
+                    <td class="morning" data-day="0" data-period="morning">Sáng</td>
+                    <td class="afternoon" data-day="0" data-period="afternoon">Chiều</td>
+                    <td class="evening" data-day="0" data-period="evening">Tối</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="dailyModal" tabindex="-1" aria-labelledby="dailyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dailyModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="modal-table w-100">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Hoạt động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dailyModalBody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal cho đồng hồ -->
+    <div class="modal fade" id="clockModal" tabindex="-1" aria-labelledby="clockModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clockModalLabel">Đồng Hồ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="clockModalBody">
+                    <!-- Nội dung sẽ được tải vào đây -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Dữ liệu lịch trình
+        const scheduleData = {
+            weekday: {
+                morning: [
+                    { start: "06:00", end: "06:30", activity: "Thức dậy, uống nước, khởi động nhẹ" },
+                    { start: "06:30", end: "07:00", activity: "Tập thể dục (cardio, yoga, bài tập tại nhà)" },
+                    { start: "07:00", end: "08:00", activity: "Tắm, ăn sáng, chuẩn bị đi làm" },
+                    { start: "08:00", end: "09:00", activity: "Di chuyển đến chỗ làm" }
+                ],
+                afternoon: [
+                    { start: "09:00", end: "12:00", activity: "Làm việc tập trung (90 phút)" },
+                    { start: "12:00", end: "13:30", activity: "Nghỉ trưa (ăn trưa, thư giãn, chợp mắt)" },
+                    { start: "13:30", end: "14:30", activity: "Làm việc tập trung (90 phút)" },
+                    { start: "18:30", end: "18:30", activity: "Hoàn thành công việc, chuẩn bị về" }
+                ],
+                evening: [
+                    { start: "18:30", end: "19:30", activity: "Di chuyển về nhà" },
+                    { start: "19:30", end: "20:00", activity: "Ăn tối nhẹ, thư giãn" },
+                    { start: "20:00", end: "22:00", activity: "Làm thêm ở nhà (2 tiếng)" },
+                    { start: "22:00", end: "22:30", activity: "Thư giãn, chuẩn bị đi ngủ" },
+                    { start: "22:30", end: "06:00", activity: "Ngủ 7,5 tiếng" }
+                ]
+            },
+            weekend: {
+                morning: [
+                    { start: "06:00", end: "06:30", activity: "Thức dậy, uống nước, khởi động nhẹ" },
+                    { start: "06:30", end: "07:00", activity: "Tập thể dục" },
+                    { start: "07:00", end: "08:00", activity: "Tắm, ăn sáng, thư giãn" },
+                    { start: "08:00", end: "09:00", activity: "Làm việc ngoài" }
+                ],
+                afternoon: [
+                    { start: "09:00", end: "12:00", activity: "Làm việc ngoài" },
+                    { start: "12:00", end: "13:00", activity: "Ăn trưa, thư giãn" },
+                    { start: "13:00", end: "18:00", activity: "Làm việc ngoài" }
+                ],
+                evening: [
+                    { start: "18:00", end: "19:30", activity: "Thư giãn" },
+                    { start: "19:30", end: "20:00", activity: "Ăn tối, thư giãn" },
+                    { start: "20:00", end: "22:00", activity: "Thư giãn" },
+                    { start: "22:00", end: "22:30", activity: "Thư giãn, chuẩn bị đi ngủ" },
+                    { start: "22:30", end: "06:00", activity: "Ngủ 7,5 tiếng" }
+                ]
+            }
+        };
+
+        // Yêu cầu quyền thông báo
+        if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+
+        // Biến kiểm soát thông báo
+        let notificationsEnabled = true;
+        let notificationTimeouts = [];
+
+        // Khởi tạo modal
+        const dailyModal = new bootstrap.Modal(document.getElementById('dailyModal'), {});
+
+        // Hiển thị lịch ngày trong modal khi nhấp
+        const cells = document.querySelectorAll('.table-modern tbody td[data-day]');
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                const day = parseInt(cell.getAttribute('data-day'));
+                const isWeekend = (day === 0 || day === 6);
+                const schedule = isWeekend ? scheduleData.weekend : scheduleData.weekday;
+                const fullSchedule = [...schedule.morning, ...schedule.afternoon, ...schedule.evening];
+                const dayName = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][day];
+
+                const dailyBody = document.getElementById('dailyModalBody');
+                dailyBody.innerHTML = '';
+                fullSchedule.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-start', item.start);
+                    row.setAttribute('data-end', item.end);
+                    row.innerHTML = `<td>${item.start} - ${item.end}</td><td>${item.activity}</td>`;
+                    dailyBody.appendChild(row);
+                });
+
+                document.getElementById('dailyModalLabel').textContent = `Lịch ngày ${dayName}`;
+                dailyModal.show();
+                highlightCurrentTime();
+            });
+        });
+
+        // Làm nổi bật khung giờ hiện tại
+        function highlightCurrentTime() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentTime = currentHour * 60 + currentMinute;
+
+            const rows = document.querySelectorAll('#dailyModalBody tr');
+            rows.forEach(row => {
+                row.classList.remove('current-time');
+                const startTime = row.getAttribute('data-start').split(':');
+                const endTime = row.getAttribute('data-end').split(':');
+                
+                const startMinutes = parseInt(startTime[0]) * 60 + parseInt(startTime[1]);
+                let endMinutes = parseInt(endTime[0]) * 60 + parseInt(endTime[1]);
+                
+                if (endMinutes < startMinutes) {
+                    endMinutes += 24 * 60;
+                }
+
+                if (currentTime >= startMinutes && currentTime < endMinutes) {
+                    row.classList.add('current-time');
+                }
+            });
+        }
+
+        // Lên lịch thông báo
+        function scheduleNotifications() {
+            notificationTimeouts.forEach(timeout => clearTimeout(timeout));
+            notificationTimeouts = [];
+
+            if (!notificationsEnabled) return;
+
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentDay = now.getDay();
+            const currentTime = currentHour * 60 + currentMinute;
+
+            for (let day = 0; day < 7; day++) {
+                const isWeekend = (day === 0 || day === 6);
+                const dailySchedule = isWeekend ? scheduleData.weekend : scheduleData.weekday;
+                const fullSchedule = [...dailySchedule.morning, ...dailySchedule.afternoon, ...dailySchedule.evening];
+                const dayName = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][day];
+
+                fullSchedule.forEach(item => {
+                    const startTime = item.start.split(':');
+                    const startMinutes = parseInt(startTime[0]) * 60 + parseInt(startTime[1]);
+                    let timeToNotify = startMinutes - currentTime + (day - currentDay) * 24 * 60;
+
+                    if (timeToNotify < 0) {
+                        timeToNotify += 7 * 24 * 60; // Tuần sau
+                    }
+
+                    const timeoutId = setTimeout(() => {
+                        if (Notification.permission === "granted" && notificationsEnabled) {
+                            new Notification(`Nhắc nhở - ${dayName}`, {
+                                body: item.activity,
+                                icon: "https://via.placeholder.com/32"
+                            });
+                        }
+                    }, timeToNotify * 60 * 1000);
+                    notificationTimeouts.push(timeoutId);
+                });
+            }
+        }
+
+        // Xử lý nút bật/tắt
+        const toggleButton = document.getElementById('toggle-notifications');
+        toggleButton.addEventListener('click', () => {
+            notificationsEnabled = !notificationsEnabled;
+            if (notificationsEnabled) {
+                toggleButton.textContent = "Bật Thông Báo";
+                toggleButton.classList.remove('off');
+                toggleButton.classList.add('on');
+                scheduleNotifications();
+            } else {
+                toggleButton.textContent = "Tắt Thông Báo";
+                toggleButton.classList.remove('on');
+                toggleButton.classList.add('off');
+                notificationTimeouts.forEach(timeout => clearTimeout(timeout));
+                notificationTimeouts = [];
+            }
+        });
+
+        // Xử lý nút popup đồng hồ
+        const clockButton = document.getElementById('toggle-clock');
+        clockButton.addEventListener('click', () => {
+            // Tải nội dung từ file dongho/index.html
+            fetch('dongho/index.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('clockModalBody').innerHTML = data;
+                    const clockModal = new bootstrap.Modal(document.getElementById('clockModal'), {});
+                    clockModal.show();
+                })
+                .catch(error => console.error('Lỗi khi tải nội dung:', error));
+        });
+
+        // Chạy khi tải trang
+        scheduleNotifications();
+        setInterval(highlightCurrentTime, 60000);
+    </script>
+</body>
+</html>
